@@ -514,7 +514,8 @@ class DALLE(nn.Module):
         text,
         image = None,
         mask = None,
-        return_loss = False
+        return_loss = False,
+        return_tokens = False,
     ):
         assert text.shape[-1] == self.text_seq_len, f'the length {text.shape[-1]} of the text tokens you passed in does not have the correct length ({self.text_seq_len})'
         device, total_seq_len = text.device, self.total_seq_len
@@ -566,6 +567,9 @@ class DALLE(nn.Module):
 
         if self.stable:
             out = self.norm_by_max(out)
+
+        if return_tokens:
+            return out
 
         logits = self.to_logits(out)
 
